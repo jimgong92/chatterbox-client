@@ -6,12 +6,26 @@ $(document).ready(function() {
       data:'order=-createdAt',
       success: function(json) {
         var arr = json.results;
-        $('li').remove();
+        $('.message').remove();
+        $('.room').remove();
+        //clear rooms
+        rooms = {};
         _.each(arr, function(item) {
-          var $res = $('<li></li>');
-          $res.text(item.username + ": " + item.text);
-          $('#messages').append($res);
+          //re-create rooms object
+          if (!rooms[item.roomname]) {
+            rooms[item.roomname] = [];
+          }
+          rooms[item.roomname].push(item);
+          // displayMessage(item);
         });
+
+        //display the messages in the room we're currently in
+        _.each(rooms[currentRoom], function(item) {
+          displayMessage(item);
+        });
+        for (var room in rooms) {
+          displayRoom(room);
+        }
       },
       error: function() {
         console.log("!!!");
@@ -19,10 +33,21 @@ $(document).ready(function() {
     });
   };
 
+  var displayMessage = function(message) {
+    var $res = $('<li class="message"></li>');
+    $res.text(message.username + ": " + message.text);
+    $('#messages').append($res);
+  };
+  var displayRoom = function(room) {
+    var $res = $('<li class="room"></li>');
+    $res.text(room);
+    $('#roomList').append($res);
+  }
   var send = function() {
     var data = JSON.stringify({
       'username': userName,
-      'text' : $('#input').val()
+      'text' : $('#input').val(),
+      'roomname': 'lobby'
     });
 
     $.ajax({
@@ -36,6 +61,8 @@ $(document).ready(function() {
   setInterval(retrieve, 1000);
 
   var userName = window.location.search.substring(window.location.search.indexOf("=") + 1);
+  var rooms = {};
+  var currentRoom = 'lobby';
 
   $('#submitButton').on('click', send);
 
@@ -44,5 +71,10 @@ $(document).ready(function() {
       send();
     }
   });
+
+  $('#roomList').on('click', '.room', function() {
+    currentRoom = $(this).text();
+    console.log(currentRoom);
+  })
 
 });
