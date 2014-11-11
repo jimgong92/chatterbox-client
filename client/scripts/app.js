@@ -19,33 +19,30 @@ $(document).ready(function() {
     });
   };
 
-  var send = function(data) {
+  var send = function() {
+    var data = JSON.stringify({
+      'username': userName,
+      'text' : $('#input').val()
+    });
+
     $.ajax({
       type: "POST",
       data: data,
       contentType: 'application/json'
     });
+    $('#input').val("");
   };
 
   setInterval(retrieve, 1000);
 
   var userName = window.location.search.substring(window.location.search.indexOf("=") + 1);
 
-  $('#submitButton').on('click', function(){
-    //calculate data to transmit
-    console.log($('#input').val() );
-    var data = JSON.stringify({
-      'username': userName,
-      'text' : $('#input').val()
-    });
-    console.log("!!");
-    send(data);
-    $('#input').val("");
+  $('#submitButton').on('click', send);
 
-    // var $newPost = $('<li></li>');
-    // var $text = $('#input').text();
-    // $newPost.text(userName + ": " + $text);
-    // $('#messages').prepend($newPost);
+  $('#input').keypress(function(e) {
+    if (e.which === 13 && $("#input").is(":focus")) {
+      send();
+    }
   });
 
 });
