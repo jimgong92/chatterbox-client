@@ -34,8 +34,25 @@ $(document).ready(function() {
   };
 
   var displayMessage = function(message) {
+    if (message.username === 'TARS') return;
     var $res = $('<li class="message"></li>');
-    $res.text(message.username + ": " + message.text);
+    // var poster = message.username;
+    // if (social_network[poster]) {
+
+    // }
+    var $usernameSpan = $('<span class="username"></span>');
+    $usernameSpan.text(message.username);
+
+    if (social_network[message.username]) {
+      $usernameSpan.addClass('bold');
+    }
+
+    var $messageSpan = $('<span></span>');
+    $messageSpan.text(": " + message.text);
+    $res.append($usernameSpan);
+    $res.append($messageSpan);
+
+    // $res.text(message.username + ": " + message.text);
     $('#messages').append($res);
   };
   var displayRoom = function(room) {
@@ -47,7 +64,7 @@ $(document).ready(function() {
     var data = JSON.stringify({
       'username': userName,
       'text' : $('#input').val(),
-      'roomname': 'lobby'
+      'roomname': $('#roomInput').val()
     });
 
     $.ajax({
@@ -63,6 +80,9 @@ $(document).ready(function() {
   var userName = window.location.search.substring(window.location.search.indexOf("=") + 1);
   var rooms = {};
   var currentRoom = 'lobby';
+  var social_network = {};
+
+  $('#roomInput').val(currentRoom);
 
   $('#submitButton').on('click', send);
 
@@ -74,7 +94,21 @@ $(document).ready(function() {
 
   $('#roomList').on('click', '.room', function() {
     currentRoom = $(this).text();
-    console.log(currentRoom);
-  })
+  });
+  //Add room
+  $('#input').keypress(function(e) {
+    if (e.which === 13 && $("#input").is(":focus") && $('#input').val().length > 0) {
+      send();
+    }
+  });
+  //Click message to add friend
+  $('#message-box').on('click', '.username', function() {
+    var poster = $(this).text();
+    social_network[poster] = true;
+    if (social_network[poster]) {
+      $(this).addClass('bold');
+    }
+
+  });
 
 });

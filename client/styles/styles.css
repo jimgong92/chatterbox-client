@@ -92,7 +92,7 @@ form input[type=text] {
 div #userContainer {
     padding: 20px;
 }
-#roomList{
+#roomInterface{
     height: 400px;
     width: 240px;
     background-color: #f4a460;
@@ -101,9 +101,14 @@ div #userContainer {
     left: 45px;
     position: absolute;
     border-radius: 20px;
+}
+#roomList{
     overflow: hidden;
     overflow-y: scroll;
 }
 .room{
     text-align: left;
+}
+.bold{
+    font-weight: bold;
 }
