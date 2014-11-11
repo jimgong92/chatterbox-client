@@ -88,3 +88,6 @@ form input[type=text] {
     overflow: hidden;
     overflow-y: scroll;
 }
+div #userContainer {
+    padding: 20px;
+}
