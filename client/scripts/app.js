@@ -3,7 +3,7 @@ $(document).ready(function() {
   var retrieve = function() {
     $.ajax({
       type: "GET",
-      data:'order=-createdAt',
+      data:'order=-createdAt&limit=1000',
       success: function(json) {
         var arr = json.results;
         $('.message').remove();
